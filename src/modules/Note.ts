@@ -1,4 +1,6 @@
 export type NoteProps = {
-  text: string;
-  id: string;
+  isDone: boolean;
+  title: string;
+  description: string;
+  id: number;
 };

@@ -4,33 +4,35 @@ import { NoteProps } from "./modules/Note";
 import { nanoid } from "nanoid";
 import "antd/dist/reset.css";
 import { Typography } from "antd";
+import axios from "axios";
 export default function App() {
-  const [notes, setNotes] = useState<NoteProps[]>([
-    {
-      text: "text1",
-      id: nanoid(),
-    },
-    {
-      text: "text2",
-      id: nanoid(),
-    },
-  ]);
+  const [notes, setNotes] = useState<NoteProps[]>([]);
 
-  // useEffect(() =>{
-  //   const saved = JSON.parse(localStorage.getItem("note-app-data"))
-  //   if(saved){
-  //     setNotes(saved)
-  //   }
-  // },[])
+  async function getData() {
+    try {
+      const res = await axios.get("http://localhost:4343/todo");
+      setNotes(res.data.data);
+    } catch (err: any) {
+      console.log(`from catch from get : ${err.message}`);
+    }
+  }
 
-  // useEffect(() => {
-  //   localStorage.setItem("note-app-data", JSON.stringify(notes));
-  // }, [notes]);
+  useEffect(() => {
+    getData();
+  }, []);
 
   return (
     <div className="App">
-      <Typography.Title>Note app </Typography.Title>
-      <NoteList notes={notes} setNotes={setNotes} />
+      <Typography.Title>Todo App </Typography.Title>
+      <NoteList notes={notes} setNotes={setNotes} getData={getData} />
     </div>
   );
 }
+
+// // } // i can't write with this form in useEffect directly
+// useEffect(() => {
+
+//   axios.get("http://localhost:4343/todo").then((res) => {
+//     setNotes(res.data.data);
+//   });
+// }, []);
